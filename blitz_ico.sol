@@ -1,6 +1,8 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract Blitz {
+import "./ownable.sol";
+
+contract Blitz is Ownable {
 
     struct Equity{
         uint usd_equity;
@@ -28,6 +30,11 @@ contract Blitz {
         require(equity[_investor].blitz_equity >= _blitz_value,
         "Can't sell more Blitz coins than you own!");
         _;
+    }
+
+    // Function to change usd_to_blitz
+    function change_usd_to_blitz(uint _new_value) external onlyOwner {
+        usd_to_blitz = _new_value;
     }
 
     // Equity in blitz
