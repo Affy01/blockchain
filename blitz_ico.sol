@@ -18,51 +18,51 @@ contract Blitz {
 
     mapping(address => Equity) equity;
 
-    modifier can_purchase (uint usd_value) {
-        require(usd_value * usd_to_blitz + total_coins_sold <= total_coins,
+    modifier can_purchase (uint _usd_value) {
+        require(_usd_value * usd_to_blitz + total_coins_sold <= total_coins,
         "No more coins left to be sold");
         _;
     }
 
-    modifier can_sell (address investor, uint blitz_value) {
-        require(equity[investor].blitz_equity >= blitz_value,
+    modifier can_sell (address _investor, uint _blitz_value) {
+        require(equity[_investor].blitz_equity >= _blitz_value,
         "Can't sell more Blitz coins than you own!");
         _;
     }
 
     // Equity in blitz
-    function equity_in_blitz(address investor) external view returns (uint blitz_equity) {
-        blitz_equity = equity[investor].blitz_equity;
+    function equity_in_blitz(address _investor) external view returns (uint blitz_equity) {
+        blitz_equity = equity[_investor].blitz_equity;
     }
 
     // Equity in USD
-    function equity_in_usd(address investor) external view returns (uint usd_equity) {
-        usd_equity = equity[investor].usd_equity;
+    function equity_in_usd(address _investor) external view returns (uint usd_equity) {
+        usd_equity = equity[_investor].usd_equity;
     }
 
     // buy Blitz
-    function buy_blitz(address investor, uint usd_value) external can_purchase(usd_value) {
-        uint total = usd_value * usd_to_blitz;
-        equity[investor].blitz_equity += total;
-        equity[investor].usd_equity += usd_value;
+    function buy_blitz(address _investor, uint _usd_value) external can_purchase(_usd_value) {
+        uint total = _usd_value * usd_to_blitz;
+        equity[_investor].blitz_equity += total;
+        equity[_investor].usd_equity += _usd_value;
         total_coins_sold += total;
     }
 
     // sell Blitz
-    function sell_blitz(address investor, uint blitz_value) external can_sell(investor, blitz_value) {
-        equity[investor].blitz_equity -= blitz_value;
-        equity[investor].usd_equity -= blitz_value/1000;
-        total_coins_sold -= blitz_value;
+    function sell_blitz(address _investor, uint _blitz_value) external can_sell(_investor, _blitz_value) {
+        equity[_investor].blitz_equity -= _blitz_value;
+        equity[_investor].usd_equity -= _blitz_value/1000;
+        total_coins_sold -= _blitz_value;
     }
 
     // exchange Blitz
-    function exchange_blitz(address investor_selling, address investor_buying, uint blitz_value) external
-    can_sell(investor_selling, blitz_value) {
-        equity[investor_selling].blitz_equity -= blitz_value;
-        equity[investor_selling].usd_equity -= blitz_value/usd_to_blitz;
+    function exchange_blitz(address _investor_selling, address _investor_buying, uint _blitz_value) external
+    can_sell(_investor_selling, _blitz_value) {
+        equity[_investor_selling].blitz_equity -= _blitz_value;
+        equity[_investor_selling].usd_equity -= _blitz_value/usd_to_blitz;
 
-        equity[investor_buying].blitz_equity += blitz_value;
-        equity[investor_buying].usd_equity += blitz_value * usd_to_blitz;
+        equity[_investor_buying].blitz_equity += _blitz_value;
+        equity[_investor_buying].usd_equity += _blitz_value * usd_to_blitz;
 
     }
 }
